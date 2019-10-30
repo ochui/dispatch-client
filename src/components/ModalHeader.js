@@ -17,6 +17,7 @@ const ModalHeader = ({ navigation, style, text }) => (
       <SvgClose />
     </TouchableOpacity>
     {text && <Text style={styles.header}>{text}</Text>}
+    <Text>Hello world</Text>
   </View>
 );
 

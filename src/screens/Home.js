@@ -7,11 +7,9 @@ import PropTypes from 'prop-types';
 import { colors, device, fonts, gStyle } from '../constants';
 
 // components
-import RequestRideType from '../components/RequestRideType';
-import SelectRideType from '../components/SelectRideType';
+import RequestHelp from '../components/RequestHelp';
 import TouchIcon from '../components/TouchIcon';
 import TouchText from '../components/TouchText';
-import WhereTo from '../components/WhereTo';
 
 // icons
 import SvgCheckShield from '../components/icons/Svg.CheckShield';
@@ -90,8 +88,7 @@ class Home extends React.Component {
 
   render() {
     const { navigation } = this.props;
-    const { type, selectType, showMap, userLat, userLon } = this.state;
-
+    const { showMap, userLat, userLon } = this.state;
     return (
       <View style={gStyle.container}>
         {showMap && (
@@ -105,6 +102,8 @@ class Home extends React.Component {
               longitudeDelta: 0.01
             }}
             showsUserLocation
+            loadingEnabled
+            showsMyLocationButton
             style={styles.map}
           />
         )}
@@ -123,22 +122,17 @@ class Home extends React.Component {
           </View>
         )}
 
-        {type === 'bike' && (
-          <View style={styles.rightContainer}>
-            <View style={styles.icons}>
-              <TouchIcon
-                icon={<SvgQRCode />}
-                iconSize={20}
-                onPress={() => navigation.navigate('ModalQRCode')}
-                style={[styles.icon, styles.iconQRCode]}
-              />
-              <TouchIcon
-                icon={<SvgCheckShield />}
-                iconSize={20}
-                onPress={() => navigation.navigate('ModalTutorialBike')}
-                style={[styles.icon, styles.iconShield]}
-              />
-            </View>
+        {showMap && (
+          <View style={styles.containerNoLocation}>
+            <Text style={styles.textLocationNeeded}>
+              We need your location data...
+            </Text>
+            <RequestHelp
+              onPress={() => navigation.navigate('ModalHelp')}
+              style={styles.btnGoTo}
+              styleText={styles.btnGoToText}
+              text="Request Help"
+            />
           </View>
         )}
 
@@ -148,30 +142,15 @@ class Home extends React.Component {
             iconSize={32}
             onPress={() => navigation.toggleDrawer()}
           />
-          <RequestRideType
-            image={types[type].image}
-            onPress={this.toggleTypeModal}
-            text={types[type].text}
+
+          <View style={styles.placeholder} />
+          <TouchText
+            onPress={() => navigation.navigate('ModalHelp')}
+            style={styles.help}
+            text="Help"
+            styleText={styles.styleText}
           />
-
-          {type === 'car' && <View style={styles.placeholder} />}
-          {type === 'bike' && (
-            <TouchText
-              onPress={() => navigation.navigate('ModalHelp')}
-              style={styles.help}
-              text="Help"
-            />
-          )}
         </View>
-
-        <SelectRideType
-          data={types}
-          onClose={this.toggleTypeModal}
-          onSelect={this.changeRideType}
-          visible={selectType}
-        />
-
-        {type === 'car' && <WhereTo />}
       </View>
     );
   }
@@ -249,6 +228,9 @@ const styles = StyleSheet.create({
   },
   iconShield: {
     backgroundColor: colors.white
+  },
+  styleText: {
+    fontSize: 18
   }
 });
 

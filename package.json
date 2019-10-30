@@ -1,8 +1,8 @@
 {
-  "name": "expo-uber",
+  "name": "dispatch",
   "version": "0.0.1",
-  "description": "uber clone with expo",
-  "author": "Caleb Nance",
+  "description": "",
+  "author": "Ochui Princewill",
   "license": "MIT",
   "keywords": [
     "expo",
@@ -30,6 +30,7 @@
     "prop-types": "^15.7.2",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+    "react-native-floating-action": "^1.19.1",
     "react-native-gesture-handler": "~1.3.0",
     "react-native-maps": "~0.24.0",
     "react-native-reanimated": "~1.1.0",

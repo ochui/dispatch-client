@@ -7,9 +7,18 @@ import SvgTruck from './icons/Svg.Truck';
 
 const WhereTo = () => (
   <View style={styles.container}>
-    <View style={styles.containerBanner}>
+    {/* <View style={styles.containerBanner}>
       <Text style={styles.bannerText}>30% off, up to $6.00</Text>
       <Text style={styles.bannerMuted}>3 days</Text>
+    </View> */}
+    <View style={styles.containerInput}>
+      <View style={styles.containerSquare}>
+        <View style={styles.square} />
+      </View>
+      <Text style={styles.text}>Loading....</Text>
+      <View style={styles.containerIcon}>
+        <SvgTruck />
+      </View>
     </View>
     <View style={styles.containerInput}>
       <View style={styles.containerSquare}>

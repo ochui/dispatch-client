@@ -1,7 +1,12 @@
-import { createAppContainer, createStackNavigator } from 'react-navigation';
+import {
+  createAppContainer,
+  createStackNavigator,
+  createSwitchNavigator
+} from 'react-navigation';
 
 // grab navigation
 import DrawerStack from './DrawerStack';
+import AuthStack from './AuthStack';
 
 // grab screens
 import ModalHelp from '../screens/ModalHelp';
@@ -43,6 +48,26 @@ const StackNavigator = createStackNavigator(
   }
 );
 
-const App = createAppContainer(StackNavigator);
+const App = createAppContainer(
+  createSwitchNavigator(
+    {
+      App: {
+        screen: StackNavigator,
+        navigationOptions: {
+          gesturesEnabled: false
+        }
+      },
+      Auth: {
+        screen: AuthStack,
+        navigationOptions: {
+          gesturesEnabled: false
+        }
+      }
+    },
+    {
+      initialRouteName: 'App'
+    }
+  )
+);
 
 export default App;
