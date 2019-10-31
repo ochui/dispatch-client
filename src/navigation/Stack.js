@@ -12,6 +12,7 @@ import AuthStack from './AuthStack';
 import ModalHelp from '../screens/ModalHelp';
 import ModalQRCode from '../screens/ModalQRCode';
 import ModalTutorialBike from '../screens/ModalTutorialBike';
+import ModalTutorial from '../screens/ModalTutorial';
 
 // grab modal routes (dynamic transitions)
 import ModalRoutes from './ModalRoutes';
@@ -36,6 +37,12 @@ const StackNavigator = createStackNavigator(
     },
     ModalTutorialBike: {
       screen: ModalTutorialBike,
+      navigationOptions: {
+        gesturesEnabled: false
+      }
+    },
+    ModalTutorial: {
+      screen: ModalTutorial,
       navigationOptions: {
         gesturesEnabled: false
       }

@@ -18,19 +18,6 @@ import SvgQRCode from '../components/icons/Svg.QRCode';
 
 const { PROVIDER_GOOGLE } = MapView;
 
-const types = {
-  car: {
-    image: 'carSm',
-    imageLg: 'carLg',
-    text: 'Ride'
-  },
-  bike: {
-    image: 'bikeSm',
-    imageLg: 'bikeLg',
-    text: 'Bike'
-  }
-};
-
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -145,7 +132,7 @@ class Home extends React.Component {
 
           <View style={styles.placeholder} />
           <TouchText
-            onPress={() => navigation.navigate('ModalHelp')}
+            onPress={() => navigation.navigate('ModalTutorial')}
             style={styles.help}
             text="Help"
             styleText={styles.styleText}
