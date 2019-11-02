@@ -5,4 +5,6 @@ import func from './functions';
 import gStyle from './globalStyles';
 import images from './preloadImages';
 
-export { colors, device, fonts, func, gStyle, images };
+const url = 'https://fast-taiga-31659.herokuapp.com/api/v1';
+
+export { colors, device, fonts, func, gStyle, images, url };

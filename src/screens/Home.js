@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
 import * as Permissions from 'expo-permissions';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { colors, device, fonts, gStyle } from '../constants';
 
 // components
@@ -12,9 +13,11 @@ import TouchIcon from '../components/TouchIcon';
 import TouchText from '../components/TouchText';
 
 // icons
-import SvgCheckShield from '../components/icons/Svg.CheckShield';
+// import SvgCheckShield from '../components/icons/Svg.CheckShield';
 import SvgMenu from '../components/icons/Svg.Menu';
-import SvgQRCode from '../components/icons/Svg.QRCode';
+// import SvgQRCode from '../components/icons/Svg.QRCode';
+
+import helpRequest from '../redux/action/helpAction';
 
 const { PROVIDER_GOOGLE } = MapView;
 
@@ -23,7 +26,6 @@ class Home extends React.Component {
     super(props);
 
     this.state = {
-      type: 'car',
       selectType: false,
       showMap: false,
       userLat: null,
@@ -31,11 +33,10 @@ class Home extends React.Component {
     };
 
     this.toggleTypeModal = this.toggleTypeModal.bind(this);
-    this.changeRideType = this.changeRideType.bind(this);
   }
 
   async componentDidMount() {
-    // get exisiting locaton permissions first
+    // get existing location permissions first
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.LOCATION
     );
@@ -67,14 +68,8 @@ class Home extends React.Component {
     }));
   }
 
-  changeRideType(type) {
-    this.setState({
-      type
-    });
-  }
-
   render() {
-    const { navigation } = this.props;
+    const { navigation, requestCop } = this.props;
     const { showMap, userLat, userLon } = this.state;
     return (
       <View style={gStyle.container}>
@@ -115,7 +110,10 @@ class Home extends React.Component {
               We need your location data...
             </Text>
             <RequestHelp
-              onPress={() => navigation.navigate('ModalHelp')}
+              onPress={() => {
+                requestCop(userLat, userLon);
+                navigation.navigate('ModalHelp');
+              }}
               style={styles.btnGoTo}
               styleText={styles.btnGoToText}
               text="Request Help"
@@ -145,7 +143,8 @@ class Home extends React.Component {
 
 Home.propTypes = {
   // required
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  requestCop: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -221,4 +220,27 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Home;
+// Map State To Props (Redux Store Passes State To Component)
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    showMap: state.help.showMap,
+    searching: state.help.searching,
+    lat: state.userLat,
+    lng: state.userLon
+  };
+};
+// Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    requestCop: (lat, lng) => {
+      dispatch(helpRequest(lat, lng));
+    }
+  };
+};
+// Exports
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
