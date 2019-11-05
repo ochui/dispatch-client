@@ -1,8 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { colors, device, fonts, gStyle } from '../constants';
+import Logo from '../components/Logo';
+import Form from '../components/Form';
+import Wallpaper from '../components/Wallpaper';
+import ButtonSubmit from '../components/ButtonSubmit';
+import SignupSection from '../components/SignupSection';
 
-class Register extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -10,13 +13,14 @@ class Register extends React.Component {
 
   render() {
     return (
-      <View style={gStyle.container}>
-        <Text>Register Screen</Text>
-      </View>
+      <Wallpaper>
+        <Logo />
+        <Form />
+        <SignupSection />
+        <ButtonSubmit />
+      </Wallpaper>
     );
   }
 }
 
-const styles = StyleSheet.create({});
-
-export default Register;
+export default Login;

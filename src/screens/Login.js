@@ -1,7 +1,10 @@
 import React from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
-import { colors, device, fonts, gStyle } from '../constants';
+import Logo from '../components/Logo';
 import Form from '../components/Form';
+import Wallpaper from '../components/Wallpaper';
+import ButtonSubmit from '../components/ButtonSubmit';
+import SignupSection from '../components/SignupSection';
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -10,23 +13,14 @@ class Login extends React.Component {
 
   render() {
     return (
-      <View style={gStyle.container}>
-        <View style={styles.AuthContainer}>
-          <Text>Hello world</Text>
-          <Form />
-        </View>
-      </View>
+      <Wallpaper>
+        <Logo />
+        <Form />
+        <SignupSection props={this.props} />
+        <ButtonSubmit />
+      </Wallpaper>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  AuthContainer: {
-    height: device.height,
-    position: 'absolute',
-    width: device.width,
-    alignSelf: 'center'
-  }
-});
 
 export default Login;
