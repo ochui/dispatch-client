@@ -11,6 +11,7 @@ import { colors, device, fonts, gStyle } from '../constants';
 import RequestHelp from '../components/RequestHelp';
 import TouchIcon from '../components/TouchIcon';
 import TouchText from '../components/TouchText';
+import CopMarkerList from '../components/CopMarkerList';
 
 // icons
 // import SvgCheckShield from '../components/icons/Svg.CheckShield';
@@ -20,7 +21,14 @@ import SvgMenu from '../components/icons/Svg.Menu';
 import helpRequest from '../redux/action/helpAction';
 
 const { PROVIDER_GOOGLE } = MapView;
-
+const cops = [
+  { lat: 4.824167, lng: 7.033611, name: 'Test cop 1' },
+  { lat: 5.0387213, lng: 7.9246855, name: 'Test cop 2' },
+  { lat: 5.0, lng: 8.516667, name: 'Test cop 3' },
+  { lat: 5.985531, lng: 7.617144, name: 'Test cop 4' },
+  { lat: 5.010519, lng: 6.910345, name: 'Test cop 5' },
+  { lat: 5.0323784, lng: 7.9246855, name: 'Test cop 6' }
+];
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -87,7 +95,9 @@ class Home extends React.Component {
             loadingEnabled
             showsMyLocationButton
             style={styles.map}
-          />
+          >
+            <CopMarkerList cops={cops} />
+          </MapView>
         )}
 
         {!showMap && (

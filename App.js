@@ -3,10 +3,12 @@ import { StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
-import { func } from './src/constants';
+import axios from 'axios';
+import { func, url } from './src/constants';
 import { store, persistor } from './src/redux/store';
 import Stack from './src/navigation/Stack';
 
+axios.defaults.baseURL = url;
 export default class App extends React.Component {
   constructor(props) {
     super(props);

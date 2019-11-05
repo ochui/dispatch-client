@@ -11,7 +11,7 @@ const helpReducer = (state = initialState, action) => {
         // State
         ...state,
         // Redux Store
-        searching: action.trueFalse
+        searching: action.payload
       };
     }
     // Default

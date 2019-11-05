@@ -2,32 +2,44 @@ import axios from 'axios';
 import * as types from './types';
 
 const helpRequest = ({ lat, lng }) => {
-  return dispatch => {
+  return async dispatch => {
     dispatch(helpRequestStarted());
 
-    axios
-      .post(`https://jsonplaceholder.typicode.com/todos`, {
-        lat,
-        lng
-      })
-      .then(res => {
-        dispatch(helpRequestSuccess(res.data));
-      })
-      .catch(err => {
-        dispatch(helpRequestFailure(err.message));
-      });
+    try {
+      const res = await axios.get('/cops');
+      dispatch(helpRequestSuccess(res.data));
+    } catch (error) {
+      dispatch(helpRequestFailure(error.message));
+    }
+  };
+};
+
+export const loadCops = () => {
+  return async dispatch => {
+    dispatch(helpRequestStarted());
+
+    try {
+      const res = await axios.get('/cops');
+      dispatch(helpRequestSuccess(res.data));
+    } catch (error) {
+      dispatch(helpRequestFailure(error.message));
+    }
   };
 };
 
 const helpRequestSuccess = location => ({
   type: types.SEARCHING_SUCCESS,
   payload: {
+    searching: false,
     ...location
   }
 });
 
 const helpRequestStarted = () => ({
-  type: types.SEARCHING_STARTED
+  type: types.SEARCHING_STARTED,
+  payload: {
+    searching: true
+  }
 });
 
 const helpRequestFailure = error => ({
