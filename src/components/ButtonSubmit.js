@@ -18,9 +18,9 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const MARGIN = 40;
 
-export default class ButtonSubmit extends Component {
-  constructor() {
-    super();
+class ButtonSubmit extends Component {
+  constructor(props) {
+    super(props);
 
     this.state = {
       isLoading: false
@@ -92,6 +92,8 @@ export default class ButtonSubmit extends Component {
     );
   }
 }
+
+export default ButtonSubmit;
 
 const styles = StyleSheet.create({
   container: {
