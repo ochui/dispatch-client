@@ -1,3 +1,6 @@
+import update from 'immutability-helper';
+import * as types from '../action/types';
+
 // Initial State
 const initialState = {
   logging_in: false,
@@ -9,13 +12,19 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     // Logged In
-    case 'LOGGING_IN': {
-      return {
-        // State
-        ...state,
-        // Redux Store
-        logging_in: action.payload
-      };
+    case types.LOGGING_IN_STARTED: {
+      return update(state, {
+        isLoading: {
+          $set: true
+        }
+      });
+    }
+    case types.LOGGING_IN_ERROR: {
+      return update(state, {
+        isLoading: {
+          $set: false
+        }
+      });
     }
     // Default
     default: {

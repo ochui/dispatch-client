@@ -3,26 +3,25 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, TextInput, Image, Dimensions } from 'react-native';
 
 const UserInput = props => {
-  const {
-    source,
-    placeholder,
-    secureTextEntry,
-    autoCorrect,
-    autoCapitalize,
-    returnKeyType
-  } = props;
+  const { input, source } = props;
+
   return (
     <View style={styles.inputWrapper}>
       <Image source={source} style={styles.inlineImg} />
       <TextInput
+        {...props}
         style={styles.input}
-        placeholder={placeholder}
-        secureTextEntry={secureTextEntry}
-        autoCorrect={autoCorrect}
-        autoCapitalize={autoCapitalize}
-        returnKeyType={returnKeyType}
+        // placeholder={placeholder}
+        // secureTextEntry={secureTextEntry}
+        // autoCorrect={autoCorrect}
+        // autoCapitalize={autoCapitalize}
+        // returnKeyType={returnKeyType}
         placeholderTextColor="white"
         underlineColorAndroid="transparent"
+        onChangeText={input.onChange}
+        onBlur={input.onBlur}
+        onFocus={input.onFocus}
+        // value={input.value}
       />
     </View>
   );
@@ -31,7 +30,7 @@ const UserInput = props => {
 export default UserInput;
 
 UserInput.defaultProps = {
-  secureTextEntry: true,
+  secureTextEntry: false,
   autoCorrect: true,
   autoCapitalize: false,
   returnKeyType: 'none'
@@ -43,7 +42,8 @@ UserInput.propTypes = {
   secureTextEntry: PropTypes.bool,
   autoCorrect: PropTypes.bool,
   autoCapitalize: PropTypes.string,
-  returnKeyType: PropTypes.string
+  returnKeyType: PropTypes.string,
+  input: PropTypes.object.isRequired
 };
 
 const DEVICE_WIDTH = Dimensions.get('window').width;

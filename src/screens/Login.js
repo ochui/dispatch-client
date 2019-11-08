@@ -11,18 +11,19 @@ import {
   Dimensions,
   View
 } from 'react-native';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { reduxForm, Field } from 'redux-form';
 import UserInput from '../components/UserInput';
 import Logo from '../components/Logo';
+import Wallpaper from '../components/Wallpaper';
+import SignupSection from '../components/SignupSection';
+import { colors, fonts } from '../constants';
+import loginRequest from '../redux/action/authAction';
 import usernameImg from '../assets/images/username.png';
 import passwordImg from '../assets/images/password.png';
 import eyeImg from '../assets/images/eye_black.png';
-import Wallpaper from '../components/Wallpaper';
-import SignupSection from '../components/SignupSection';
-
 import spinner from '../assets/images/loading.gif';
-import { colors, fonts } from '../constants';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const MARGIN = 40;
@@ -32,8 +33,7 @@ class Login extends React.Component {
     super(props);
     this.state = {
       showPass: true,
-      press: false,
-      isLoading: false
+      press: false
     };
     this.showPass = this.showPass.bind(this);
     this.buttonAnimated = new Animated.Value(0);
@@ -50,11 +50,11 @@ class Login extends React.Component {
     }
   }
 
-  _onPress() {
-    const { isLoading } = this.state;
+  _onPress(values, isLoading) {
+    // const { isLoading } = this.state;
+    const { loginRequestAction } = this.props;
     if (isLoading) return;
-
-    this.setState({ isLoading: true });
+    loginRequestAction(values.username, values.password);
     Animated.timing(this.buttonAnimated, {
       toValue: 1,
       duration: 200,
@@ -62,12 +62,10 @@ class Login extends React.Component {
     }).start();
 
     setTimeout(() => {
-      console.log('grow done');
-      // this._onGrow();
+      this._onGrow();
     }, 2000);
 
     setTimeout(() => {
-      this.setState({ isLoading: false });
       this.buttonAnimated.setValue(0);
       this.growAnimated.setValue(0);
     }, 2300);
@@ -82,7 +80,8 @@ class Login extends React.Component {
   }
 
   render() {
-    const { showPass, isLoading } = this.state;
+    const { showPass } = this.state;
+    const { handleSubmit, isLoading } = this.props;
     const changeWidth = this.buttonAnimated.interpolate({
       inputRange: [0, 1],
       outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
@@ -96,15 +95,34 @@ class Login extends React.Component {
       <Wallpaper>
         <Logo />
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
-          <UserInput
+          {/* <UserInput
             source={usernameImg}
             placeholder="Username"
             autoCapitalize="none"
             returnKeyType="done"
             autoCorrect={false}
             secureTextEntry={false}
+          /> */}
+          <Field
+            name="username"
+            component={UserInput}
+            source={usernameImg}
+            placeholder="Username"
+            returnKeyType="done"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
-          <UserInput
+          {/* <UserInput
+            source={passwordImg}
+            secureTextEntry={showPass}
+            placeholder="Password"
+            returnKeyType="done"
+            autoCapitalize="none"
+            autoCorrect={false}
+          /> */}
+          <Field
+            name="password"
+            component={UserInput}
             source={passwordImg}
             secureTextEntry={showPass}
             placeholder="Password"
@@ -126,7 +144,9 @@ class Login extends React.Component {
           <Animated.View style={{ width: changeWidth }}>
             <TouchableOpacity
               style={styles.button}
-              onPress={this._onPress}
+              onPress={handleSubmit(values => {
+                this._onPress(values, isLoading);
+              })}
               activeOpacity={1}
             >
               {isLoading ? (
@@ -198,6 +218,12 @@ const styles = StyleSheet.create({
   }
 });
 
+Login.propTypes = {
+  loginRequestAction: propTypes.func.isRequired,
+  handleSubmit: propTypes.func.isRequired,
+  isLoading: propTypes.bool.isRequired
+};
+
 // Map State To Props (Redux Store Passes State To Component)
 const mapStateToProps = state => {
   // Redux Store --> Component
@@ -206,13 +232,20 @@ const mapStateToProps = state => {
   };
 };
 // Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
-const mapDispatchToProps = () => {
+const mapDispatchToProps = dispatch => {
   // Action
-  return {};
+  return {
+    loginRequestAction: (username, password) => {
+      dispatch(loginRequest(username, password));
+    }
+  };
 };
 
-// Exports
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);
+export default reduxForm({
+  form: 'login'
+})(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Login)
+);

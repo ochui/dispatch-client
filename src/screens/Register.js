@@ -11,18 +11,19 @@ import {
   Dimensions,
   View
 } from 'react-native';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { reduxForm, Field } from 'redux-form';
 import UserInput from '../components/UserInput';
 import Logo from '../components/Logo';
+import Wallpaper from '../components/Wallpaper';
+import LoginSection from '../components/LoginSection';
+import { colors, fonts } from '../constants';
+import loginRequest from '../redux/action/authAction';
 import usernameImg from '../assets/images/username.png';
 import passwordImg from '../assets/images/password.png';
 import eyeImg from '../assets/images/eye_black.png';
-import Wallpaper from '../components/Wallpaper';
-import LoginSection from '../components/LoginSection';
-
 import spinner from '../assets/images/loading.gif';
-import { colors, fonts } from '../constants';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const MARGIN = 40;
@@ -32,8 +33,7 @@ class Register extends React.Component {
     super(props);
     this.state = {
       showPass: true,
-      press: false,
-      isLoading: false
+      press: false
     };
     this.showPass = this.showPass.bind(this);
     this.buttonAnimated = new Animated.Value(0);
@@ -50,11 +50,11 @@ class Register extends React.Component {
     }
   }
 
-  _onPress() {
-    const { isLoading } = this.state;
+  _onPress(values, isLoading) {
+    // const { isLoading } = this.state;
+    const { loginRequestAction } = this.props;
     if (isLoading) return;
-
-    this.setState({ isLoading: true });
+    loginRequestAction(values.username, values.password);
     Animated.timing(this.buttonAnimated, {
       toValue: 1,
       duration: 200,
@@ -62,12 +62,10 @@ class Register extends React.Component {
     }).start();
 
     setTimeout(() => {
-      console.log('grow done');
-      // this._onGrow();
+      this._onGrow();
     }, 2000);
 
     setTimeout(() => {
-      this.setState({ isLoading: false });
       this.buttonAnimated.setValue(0);
       this.growAnimated.setValue(0);
     }, 2300);
@@ -82,7 +80,8 @@ class Register extends React.Component {
   }
 
   render() {
-    const { showPass, isLoading } = this.state;
+    const { showPass } = this.state;
+    const { handleSubmit, isLoading } = this.props;
     const changeWidth = this.buttonAnimated.interpolate({
       inputRange: [0, 1],
       outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
@@ -96,15 +95,34 @@ class Register extends React.Component {
       <Wallpaper>
         <Logo />
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
-          <UserInput
+          {/* <UserInput
             source={usernameImg}
             placeholder="Username"
             autoCapitalize="none"
             returnKeyType="done"
             autoCorrect={false}
             secureTextEntry={false}
+          /> */}
+          <Field
+            name="username"
+            component={UserInput}
+            source={usernameImg}
+            placeholder="Username"
+            returnKeyType="done"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
-          <UserInput
+          {/* <UserInput
+            source={passwordImg}
+            secureTextEntry={showPass}
+            placeholder="Password"
+            returnKeyType="done"
+            autoCapitalize="none"
+            autoCorrect={false}
+          /> */}
+          <Field
+            name="password"
+            component={UserInput}
             source={passwordImg}
             secureTextEntry={showPass}
             placeholder="Password"
@@ -126,13 +144,15 @@ class Register extends React.Component {
           <Animated.View style={{ width: changeWidth }}>
             <TouchableOpacity
               style={styles.button}
-              onPress={this._onPress}
+              onPress={handleSubmit(values => {
+                this._onPress(values, isLoading);
+              })}
               activeOpacity={1}
             >
               {isLoading ? (
                 <Image source={spinner} style={styles.image} />
               ) : (
-                <Text style={styles.text}>REGISTER</Text>
+                <Text style={styles.text}>LOGIN</Text>
               )}
             </TouchableOpacity>
             <Animated.View
@@ -198,19 +218,34 @@ const styles = StyleSheet.create({
   }
 });
 
-// Map State To Props (Redux Store Passes State To Component)
-const mapStateToProps = () => {
-  // Redux Store --> Component
-  return {};
-};
-// Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
-const mapDispatchToProps = () => {
-  // Action
-  return {};
+Register.propTypes = {
+  loginRequestAction: propTypes.func.isRequired,
+  handleSubmit: propTypes.func.isRequired,
+  isLoading: propTypes.bool.isRequired
 };
 
-// Exports
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Register);
+// Map State To Props (Redux Store Passes State To Component)
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    isLoading: state.auth.isLoading
+  };
+};
+// Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    loginRequestAction: (username, password) => {
+      dispatch(loginRequest(username, password));
+    }
+  };
+};
+
+export default reduxForm({
+  form: 'register'
+})(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Register)
+);

@@ -6,7 +6,7 @@ const loginRequest = () => {
     dispatch(loginRequestStarted());
 
     try {
-      const res = await axios.get('/auth/login');
+      const res = await axios.post('/auth/login');
       dispatch(loginRequestSuccess(res.data));
     } catch (error) {
       dispatch(loginRequestFailure(error.message));
@@ -28,22 +28,22 @@ export const loadCops = () => {
 };
 
 const loginRequestSuccess = location => ({
-  type: types.SEARCHING_SUCCESS,
+  type: types.LOGGING_IN_SUCCESS,
   payload: {
-    searching: false,
+    isLoading: false,
     ...location
   }
 });
 
 const loginRequestStarted = () => ({
-  type: types.SEARCHING_STARTED,
+  type: types.LOGGING_IN_STARTED,
   payload: {
-    searching: true
+    isLoading: true
   }
 });
 
 const loginRequestFailure = error => ({
-  type: types.SEARCHING_ERROR,
+  type: types.LOGGING_IN_ERROR,
   payload: {
     error
   }
