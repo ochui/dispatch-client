@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import {
@@ -9,7 +10,8 @@ import {
   Animated,
   Easing,
   Dimensions,
-  View
+  View,
+  Alert
 } from 'react-native';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -19,7 +21,7 @@ import Logo from '../components/Logo';
 import Wallpaper from '../components/Wallpaper';
 import SignupSection from '../components/SignupSection';
 import { colors, fonts } from '../constants';
-import loginRequest from '../redux/action/authAction';
+import { loginRequest, clearAuthError } from '../redux/action/authAction';
 import usernameImg from '../assets/images/username.png';
 import passwordImg from '../assets/images/password.png';
 import eyeImg from '../assets/images/eye_black.png';
@@ -41,6 +43,14 @@ class Login extends React.Component {
     this._onPress = this._onPress.bind(this);
   }
 
+  componentDidUpdate() {
+    const { isLoading, error, clearError } = this.props;
+    if (!isLoading && error !== null) {
+      Alert.alert('Authentication error', error.error);
+      clearError();
+    }
+  }
+
   showPass() {
     const { press } = this.state;
     if (press === false) {
@@ -60,15 +70,6 @@ class Login extends React.Component {
       duration: 200,
       easing: Easing.linear
     }).start();
-
-    setTimeout(() => {
-      this._onGrow();
-    }, 2000);
-
-    setTimeout(() => {
-      this.buttonAnimated.setValue(0);
-      this.growAnimated.setValue(0);
-    }, 2300);
   }
 
   _onGrow() {
@@ -81,7 +82,7 @@ class Login extends React.Component {
 
   render() {
     const { showPass } = this.state;
-    const { handleSubmit, isLoading } = this.props;
+    const { handleSubmit, isLoading, logging_in, navigation } = this.props;
     const changeWidth = this.buttonAnimated.interpolate({
       inputRange: [0, 1],
       outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
@@ -90,6 +91,18 @@ class Login extends React.Component {
       inputRange: [0, 1],
       outputRange: [1, MARGIN]
     });
+
+    if (!isLoading && logging_in) {
+      this._onGrow();
+      this.buttonAnimated.setValue(0);
+      this.growAnimated.setValue(0);
+      setTimeout(() => {
+        navigation.navigate('App');
+      }, 500);
+    } else {
+      this.buttonAnimated.setValue(0);
+      this.growAnimated.setValue(0);
+    }
 
     return (
       <Wallpaper>
@@ -221,14 +234,20 @@ const styles = StyleSheet.create({
 Login.propTypes = {
   loginRequestAction: propTypes.func.isRequired,
   handleSubmit: propTypes.func.isRequired,
-  isLoading: propTypes.bool.isRequired
+  isLoading: propTypes.bool.isRequired,
+  navigation: propTypes.object.isRequired,
+  logging_in: propTypes.bool.isRequired,
+  error: propTypes.object.isRequired,
+  clearError: propTypes.func.isRequired
 };
 
 // Map State To Props (Redux Store Passes State To Component)
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    isLoading: state.auth.isLoading
+    isLoading: state.auth.isLoading,
+    logging_in: state.auth.logging_in,
+    error: state.auth.error
   };
 };
 // Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
@@ -237,6 +256,9 @@ const mapDispatchToProps = dispatch => {
   return {
     loginRequestAction: (username, password) => {
       dispatch(loginRequest(username, password));
+    },
+    clearError: () => {
+      dispatch(clearAuthError());
     }
   };
 };

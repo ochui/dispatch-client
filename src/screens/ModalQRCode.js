@@ -12,8 +12,7 @@ class ModalQRCode extends React.Component {
     super(props);
 
     this.state = {
-      cameraAccess: null,
-      qrCode: null
+      cameraAccess: null
     };
 
     this.handleBarCodeScanned = this.handleBarCodeScanned.bind(this);

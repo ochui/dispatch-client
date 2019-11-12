@@ -13,6 +13,7 @@ import ModalHelp from '../screens/ModalHelp';
 import ModalQRCode from '../screens/ModalQRCode';
 import ModalTutorialBike from '../screens/ModalTutorialBike';
 import ModalTutorial from '../screens/ModalTutorial';
+import AuthCheck from '../screens/AuthCheck';
 
 // grab modal routes (dynamic transitions)
 import ModalRoutes from './ModalRoutes';
@@ -69,10 +70,16 @@ const App = createAppContainer(
         navigationOptions: {
           gesturesEnabled: false
         }
+      },
+      AuthCheck: {
+        screen: AuthCheck,
+        navigationOptions: {
+          gesturesEnabled: false
+        }
       }
     },
     {
-      initialRouteName: 'Auth'
+      initialRouteName: 'AuthCheck'
     }
   )
 );

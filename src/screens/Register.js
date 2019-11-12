@@ -152,7 +152,7 @@ class Register extends React.Component {
               {isLoading ? (
                 <Image source={spinner} style={styles.image} />
               ) : (
-                <Text style={styles.text}>LOGIN</Text>
+                <Text style={styles.text}>REGISTER</Text>
               )}
             </TouchableOpacity>
             <Animated.View
