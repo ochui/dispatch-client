@@ -56,6 +56,41 @@ const authReducer = (state = initialState, action) => {
         }
       });
     }
+    // Registration
+    case types.REGISTRATION_STARTED: {
+      return update(state, {
+        isLoading: {
+          $set: true
+        },
+        error: {
+          $set: null
+        }
+      });
+    }
+    case types.REGISTRATION_ERROR: {
+      return update(state, {
+        isLoading: {
+          $set: false
+        },
+        error: {
+          $set: payload
+        }
+      });
+    }
+    case types.REGISTRATION_SUCCESS: {
+      return update(state, {
+        isLoading: {
+          $set: false
+        },
+        token: {
+          $set: payload.key
+        },
+        logging_in: {
+          $set: true
+        }
+      });
+    }
+
     // Profile
     case types.LOAD_PROFILE_STARTED: {
       return update(state, {

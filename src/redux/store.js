@@ -8,7 +8,7 @@ import rootReducer from './reducers/index';
 // Middleware: Redux Persist Config
 const persistConfig = {
   // Root
-  key: 'root-dev-new-new',
+  key: 'root-dev-new-new-',
   // Storage Method (React Native)
   storage: AsyncStorage,
   // Whitelist (Save Specific Reducers)

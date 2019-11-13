@@ -60,7 +60,7 @@ propTypes.defaults = {
 const mapActionsToProps = dispatch => {
   return {
     getUserProfile: () => {
-      dispatch(loadUserProfile);
+      dispatch(loadUserProfile());
     }
   };
 };

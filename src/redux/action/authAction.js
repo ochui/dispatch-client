@@ -17,16 +17,18 @@ export const loginRequest = (user, pass) => {
   };
 };
 
-export const registrationRequest = (userName, passWord, phoneNumber) => {
+export const registrationRequest = (userName, passWord) => {
   return async dispatch => {
     dispatch(registrationRequestStarted());
     try {
       const res = await axios.post('/auth/registration/', {
         username: userName,
-        password: passWord,
-        phone_number: phoneNumber
+        password1: passWord,
+        password2: passWord
+        // phone_number: phoneNumber
       });
       dispatch(registrationRequestSuccess(res.data));
+      loginRequest(userName, passWord);
     } catch (error) {
       dispatch(registrationRequestFailure(error.message));
     }
@@ -36,17 +38,16 @@ export const registrationRequest = (userName, passWord, phoneNumber) => {
 export const loadUserProfile = () => {
   return async dispatch => {
     dispatch(ProfileRequestStarted());
-    console.log(11111111111111111111111111);
     try {
       const res = await axios.get('/auth/user/');
-      console.log(res);
       dispatch(ProfileRequestSuccess(res.data));
     } catch (error) {
-      console.log(222222222222222222222222222);
       dispatch(ProfileRequestFailure(error.message));
     }
   };
 };
+
+export const requestLogout = () => {};
 
 export const clearAuthError = () => {
   return dispatch => {
@@ -113,27 +114,21 @@ const registrationRequestFailure = error => ({
 
 // Profile
 const ProfileRequestSuccess = data => ({
-  type: types.REGISTRATION_SUCCESS,
+  type: types.LOAD_PROFILE_SUCCESS,
   payload: {
-    isRequesting: false,
     ...data
   }
 });
 
-const ProfileRequestFailure = data => ({
-  type: types.REGISTRATION_SUCCESS,
+const ProfileRequestFailure = error => ({
+  type: types.LOAD_PROFILE_ERROR,
   payload: {
-    isRequesting: false,
-    ...data
+    ...error
   }
 });
 
 const ProfileRequestStarted = token => ({
-  type: types.LOGGING_IN_SUCCESS,
-  payload: {
-    isRequesting: false,
-    ...token
-  }
+  type: types.LOAD_PROFILE_STARTED
 });
 
 export default loginRequest;
