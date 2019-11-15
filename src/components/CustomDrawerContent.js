@@ -10,10 +10,11 @@ import {
   Alert
 } from 'react-native';
 import Constants from 'expo-constants';
+import { DrawerItems } from 'react-navigation';
 // import PropTypes from 'prop-types';
 import { colors, device, fonts } from '../constants';
 
-const CustomDrawerContent = () => (
+const CustomDrawerContent = props => (
   <View style={styles.container}>
     <ScrollView
       contentContainerStyle={{
@@ -37,7 +38,7 @@ const CustomDrawerContent = () => (
             }}
           />
         </View>
-        {/* <DrawerItems {...props} /> */}
+        <DrawerItems {...props} />
       </SafeAreaView>
     </ScrollView>
     <View style={styles.containerVersion}>

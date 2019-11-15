@@ -50,10 +50,16 @@ export const loadUserProfile = () => {
 export const requestLogout = () => {};
 
 export const clearAuthError = () => {
-  return dispatch => {
-    dispatch({
-      type: types.CLEAR_AUTH_ERROR
-    });
+  return async dispatch => {
+    try {
+      const res = await axios.post('auth/logout/');
+      dispatch({
+        type: types.CLEAR_AUTH_ERROR,
+        payload: res.data
+      });
+    } catch (error) {
+      dispatch(loginRequestFailure(error.message));
+    }
   };
 };
 
