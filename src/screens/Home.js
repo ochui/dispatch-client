@@ -18,7 +18,12 @@ import CopMarkerList from '../components/CopMarkerList';
 import SvgMenu from '../components/icons/Svg.Menu';
 // import SvgQRCode from '../components/icons/Svg.QRCode';
 
-import helpRequest from '../redux/action/helpAction';
+// Actions
+import {
+  LocationRequestFailure,
+  LocationRequestStarted,
+  LocationRequestSuccess
+} from '../redux/action/locationAction';
 
 const { PROVIDER_GOOGLE } = MapView;
 const cops = [
@@ -44,13 +49,19 @@ class Home extends React.Component {
   }
 
   async componentDidMount() {
+    const {
+      requestLocation,
+      requestLocationFailure,
+      requestLocationSuccess
+    } = this.props;
     // get existing location permissions first
+    requestLocation();
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.LOCATION
     );
     let finalStatus = existingStatus;
 
-    // ask again to grant locaton permissions (if not already allowed)
+    // ask again to grant location permissions (if not already allowed)
     if (existingStatus !== 'granted') {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
       finalStatus = status;
@@ -58,6 +69,7 @@ class Home extends React.Component {
 
     // still not allowed to use location?
     if (finalStatus !== 'granted') {
+      requestLocationFailure();
       return;
     }
 
@@ -68,6 +80,8 @@ class Home extends React.Component {
       userLat: coords.latitude,
       userLon: coords.longitude
     });
+
+    requestLocationSuccess(coords.latitude, coords.longitude);
   }
 
   toggleTypeModal() {
@@ -77,7 +91,7 @@ class Home extends React.Component {
   }
 
   render() {
-    const { navigation, requestCop } = this.props;
+    const { navigation } = this.props;
     const { showMap, userLat, userLon } = this.state;
     return (
       <View style={gStyle.container}>
@@ -121,7 +135,6 @@ class Home extends React.Component {
             </Text>
             <RequestHelp
               onPress={() => {
-                requestCop(userLat, userLon);
                 navigation.navigate('ModalHelp');
               }}
               style={styles.btnGoTo}
@@ -154,7 +167,9 @@ class Home extends React.Component {
 Home.propTypes = {
   // required
   navigation: PropTypes.object.isRequired,
-  requestCop: PropTypes.func.isRequired
+  requestLocation: PropTypes.func.isRequired,
+  requestLocationSuccess: PropTypes.func.isRequired,
+  requestLocationFailure: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -236,16 +251,22 @@ const mapStateToProps = state => {
   return {
     showMap: state.help.showMap,
     searching: state.help.searching,
-    lat: state.userLat,
-    lng: state.userLon
+    userLat: state.location.lat,
+    userLon: state.location.lng
   };
 };
 // Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
 const mapDispatchToProps = dispatch => {
   // Action
   return {
-    requestCop: (lat, lng) => {
-      dispatch(helpRequest(lat, lng));
+    requestLocation: () => {
+      dispatch(LocationRequestStarted());
+    },
+    requestLocationSuccess: (lat, lng) => {
+      dispatch(LocationRequestSuccess(lat, lng));
+    },
+    requestLocationFailure: () => {
+      dispatch(LocationRequestFailure());
     }
   };
 };

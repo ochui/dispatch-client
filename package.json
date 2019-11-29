@@ -20,6 +20,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@giantmachines/redux-websocket": "^1.1.5",
     "axios": "^0.19.0",
     "expo": "^34.0.4",
     "expo-asset": "^6.0.0",

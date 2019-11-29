@@ -1104,6 +1104,13 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
+"@giantmachines/redux-websocket@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@giantmachines/redux-websocket/-/redux-websocket-1.1.5.tgz#bb842da32b32c34a6ffd9849153115f79a553073"
+  integrity sha512-VNJWiPjbQLvVClgQf51mKYptVk2/tQVp9ZvuoqgQ8juV3bsy9gEANN/8sly7jm/h8fn6FUXyMr8jW6ovHoguqg==
+  dependencies:
+    redux "~4"
+
 "@react-native-community/cli@^1.2.1":
   version "1.9.8"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli/-/cli-1.9.8.tgz#8488699f78b146cab2d7451951c4218671812cdc"
@@ -4771,7 +4778,7 @@ redux-thunk@^2.3.0:
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
   integrity sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
 
-redux@^4.0.4:
+redux@^4.0.4, redux@~4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.4.tgz#4ee1aeb164b63d6a1bcc57ae4aa0b6e6fa7a3796"
   integrity sha512-vKv4WdiJxOWKxK0yRoaK3Y4pxxB0ilzVx6dszU2W8wLxlb2yikRph4iV/ymtdJ6ZxpBLFbyrxklnT5yBbQSl3Q==
